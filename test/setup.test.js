@@ -5,9 +5,9 @@ import blogModel from '../models/blogModel.js'
 import messageModel from '../models/messageModel.js'
 
 
-mongoose
-  .connect('mongodb+srv://root:root@cluster0.fdacs.mongodb.net/mybrand')
-  .then(() => console.log('DB connected successful !'));
+//mongoose
+//  .connect('mongodb+srv://root:root@cluster0.fdacs.mongodb.net/mybrand')
+  //.then(() => console.log('DB connected successful !'));
 
 before((done) => { 
     User.deleteMany({}, function(err) {})
