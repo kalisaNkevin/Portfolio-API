@@ -28,7 +28,7 @@ const Router = express.Router();
 
 /**
  * @swagger
- * /api/v1/user:
+ * /api/v1/users:
  *  get:
  *    summary: Use to request all users
  *    tags:
@@ -39,7 +39,7 @@ const Router = express.Router();
  */
 /**
  * @swagger
- * /api/v1/user/updateMe:
+ * /api/v1/users/updateMe:
  *  patch:
  *    summary: Use to update user info
  *    tags:
@@ -68,7 +68,7 @@ const Router = express.Router();
  */
 /**
  * @swagger
- * /api/v1/user/{id}:
+ * /api/v1/users/{id}:
  *  get:
  *    summary: Use to request  user by ID
  *    tags:
@@ -85,7 +85,7 @@ const Router = express.Router();
  */
 /**
  * @swagger
- * /api/v1/user/logout:
+ * /api/v1/users/logout:
  *  get:
  *    summary: Use to logout a user
  *    tags:
@@ -97,7 +97,7 @@ const Router = express.Router();
 
 /**
  * @swagger
- * /api/v1/user/signup:
+ * /api/v1/users/signup:
  *    post:
  *      summary: Use to create a user
  *      tags:
@@ -136,7 +136,7 @@ const Router = express.Router();
  */
 /**
  * @swagger
- * /api/v1/user/login:
+ * /api/v1/users/login:
  *    post:
  *      summary: Use to login a user
  *      tags:
@@ -167,7 +167,7 @@ const Router = express.Router();
 
 /**
  * @swagger
- * /api/v1/user/updatepassword:
+ * /api/v1/users/updatepassword:
  *    patch:
  *      summary: Use to update user password
  *      tags:
@@ -200,7 +200,7 @@ const Router = express.Router();
  *             application/json
  *
  * @swagger
- * /api/v1/user/forgotpassword:
+ * /api/v1/users/forgotpassword:
  *    post:
  *      summary: Use to send reset password token
  *      tags:
@@ -225,7 +225,7 @@ const Router = express.Router();
  *             application/json
  *
  * @swagger
- * /api/v1/user/resetpassword/{token}:
+ * /api/v1/users/resetpassword/{token}:
  *    patch:
  *      summary: Use to reset user password
  *      tags:
