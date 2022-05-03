@@ -9,10 +9,8 @@ mongoose
 
 
 //Listern to my server
-const port = process.env.port || 3000;
-
-const server = app.listen(port, () => {
-  console.log(`App running on port ${port}...`);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Our app is running on port ${ PORT }`);
 });
-
 export default app
