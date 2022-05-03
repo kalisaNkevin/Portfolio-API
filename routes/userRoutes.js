@@ -64,7 +64,7 @@ const Router = express.Router();
  *          type: string
  *    responses:
  *      '200':
- *        description: user updated successfully
+ *        description: user updated success
  */
 /**
  * @swagger
@@ -83,18 +83,6 @@ const Router = express.Router();
  *      '200':
  *        description: The user description
  */
-/**
- * @swagger
- * /api/v1/user/subscription/:
- *  get:
- *    summary: Use to request subscription
- *    tags:
- *         - users
- *    responses:
- *      '200':
- *        description: The user description
- */
-
 /**
  * @swagger
  * /api/v1/user/logout:
@@ -124,24 +112,24 @@ const Router = express.Router();
  *              -name,
  *              -email,
  *              -password,
- *              -password_confirm
+ *              -passwordConfirm
  *          schema:
  *            type: object
  *          properties:
  *               name:
  *                 type: string
- *                 example: Eddy Uwambaje
+ *                 example: Kalisa Ngabo Kevin
  *               email:
  *                 type: string
  *               password:
  *                 type: string
- *               password_confirm:
+ *               passwordConfirm:
  *                 type: string
  *          example:
- *               name: Eddy Uwambaje
- *               email: uwambajeddy@gmail.com
- *               password: uwambajeddy
- *               password_confirm: uwambajeddy
+ *               name: Kalisa Kevin
+ *               email: kevinkalisa84@gmail.com
+ *               password: andela123
+ *               passwordConfirm: andela123
  *      responses:
  *        '201':
  *          description: Successfully created user
@@ -170,8 +158,8 @@ const Router = express.Router();
  *               password:
  *                 type: string
  *          example:
- *               email: uwambajeddy@gmail.com
- *               password: uwambajeddy
+ *               email: kevinkalisa84@gmail.com
+ *               password: andela123
  *      responses:
  *        '201':
  *          description: Successfully logged in user
@@ -190,21 +178,21 @@ const Router = express.Router();
  *          description: Use to update user password
  *          required:
  *              -password,
- *              -password_confirm
- *              -password_current
+ *              -passwordConfirm
+ *              -passwordCurrent
  *          schema:
  *            type: object
  *          properties:
  *               password:
  *                 type: string
- *               password_confirm:
+ *               passwordConfirm:
  *                 type: string
- *               password_current:
+ *               passwordCurrent:
  *                 type: string
  *          example:
- *               password: uwambajeddy1
- *               password_confirm: uwambajeddy1
- *               password_current: uwambajeddy
+ *               password: anabele123
+ *               passwordConfirm: anabele123
+ *               passwordCurrent: andela123
  *      responses:
  *        '200':
  *          description: Password successfully updated
@@ -229,7 +217,7 @@ const Router = express.Router();
  *               email:
  *                 type: string
  *          example:
- *               email: uwambajeddy@gmail.com
+ *               email: kevinkalisa84@gmail.com
  *      responses:
  *        '200':
  *          description: sent a reset token successfully
@@ -252,17 +240,17 @@ const Router = express.Router();
  *          description: Use to reset user password
  *          required:
  *              -password,
- *              -password_confirm
+ *              -passwordConfirm
  *          schema:
  *            type: object
  *          properties:
  *               password:
  *                 type: string
- *               password_confirm:
+ *               passwordConfirm:
  *                 type: string
  *          example:
- *               password: uwambajeddy
- *               password_confirm: uwambajeddy
+ *               password: andela123
+ *               passwordConfirm: andela123
  *      responses:
  *        '200':
  *          description: Password successfully updated
