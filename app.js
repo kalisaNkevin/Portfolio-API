@@ -54,9 +54,7 @@ app.get('/', (req, res) => {
 app.use('/api/v1/blogs', blogRouter);
 app.use('/api/v1/messages', messageRouter);
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/users/register', userRouter);
-app.use('/api/v1/users/login', userRouter);
-app.use('/api/v1/users/logout', userRouter);
+
 
 
 

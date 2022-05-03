@@ -1,6 +1,5 @@
-import catchAsync from '../util/catchAsync.js';
-import AppError from '../util/AppError.js';
-
+import catchAsync from '../utils/catchAsync.js';
+import AppError from '../utils/AppError.js';
 import blogModel from '../models/blogModel.js';
 
 export const getBlogs = catchAsync(async (req, res, next) => {

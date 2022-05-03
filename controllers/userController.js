@@ -1,120 +1,116 @@
+import multer from 'multer';
+import sharp from 'sharp';
 import User from '../models/userModel.js';
-import createError from 'http-errors';
-import bcrypt from 'bcrypt';
-import {authSchema, loginSchema} from '../authentication/validationSchema.js';
-import {signAccessToken, signRefreshToken, verifyRefreshToken} from '../authentication/jwtHelper.js';
+import catchAsync from '../utils/catchAsync.js';
+import AppError from '../utils/appError.js';
+import { getAll,
+         getOne,
+        deleteOne,
+        updateOne
 
+} from './handlerFactory.js';
 
+// const multerStorage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, 'public/img/users');
+//   },
+//   filename: (req, file, cb) => {
+//     const ext = file.mimetype.split('/')[1];
+//     cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+//   }
+// });
+const multerStorage = multer.memoryStorage();
 
-export const register = async (req, res, next) => {
-        try {
-            const userDetails = await authSchema.validateAsync(req.body)
-            const doesExist = await User.findOne({email: userDetails.email})
-            if (doesExist) throw createError.Conflict(`${userDetails.email} Email Has Already Been Registered`)
-            const newUser = new User(userDetails)
-            const savedUser = await newUser.save()
-            const newUserId = savedUser.id
-            const accessToken = await signAccessToken(savedUser.id)
-            const refreshToken = await signRefreshToken(savedUser.id)
-            res.cookie('accessToken', accessToken, { maxAge: 1000 * 60 * 60 * 3, path: '/', sameSite: 'Lax'})
-            res.status(201).send({accessToken, refreshToken, newUserId})
-    
-        } catch (error) {
-            if (error.isJoi === true ) error.status = 422
-            next(error)
-        }
-    }
-  
-export const login = async (req, res, next) => {
-        try {
-            // Validating the http request
-            const result = await loginSchema.validateAsync(req.body)
-            const user = await User.findOne({email: result.email})
-    
-            if (!user) throw createError.NotFound('User Not Registered')
-            const isMatch = await user.isValidPassword(result.password)
-            if (!isMatch) throw createError.Unauthorized('Invalid Username Or Password')
-            const accessToken = await signAccessToken(user.id)
-            const refreshToken = await signRefreshToken(user.id)
-            res.cookie('accessToken', accessToken, { path: '/', sameSite: 'Lax', maxAge: 1000 * 60 * 60 * 3})
-             res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 365 })
-            res.status(200).send({accessToken, refreshToken})
-        } catch (error) {
-            if (error.isJoi === true) return next(createError.BadRequest('Invalid Email Or Password'))
-            next(error)
-            
-        }
-    }
- export const refreshToken = async (req, res, next) => {
-        try {
-            const refreshToken = req.cookies.refreshToken
-            if (!refreshToken) throw createError.BadRequest()
-            const userId = await verifyRefreshToken(refreshToken)
-            const accessToken = await signAccessToken(userId) 
-            const refToken = await signRefreshToken(userId) 
-            res.cookie('accessToken', accessToken, { httpOnly: true, maxAge: 1000 * 60 * 60 * 3, path: '/', sameSite: 'Lax'})
-            // res.cookie('refreshToken', refToken, { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 365 })
-            res.status(201).send('Logged In Successfully')
-            res.send({accessToken, refToken})
-    
-        } catch (error) {
-            next(error)
-        }
-    }
-  
- export const logout = async (req, res, next) => {
-        try {
-             res.cookie('refreshToken', '', {maxAge: 1}) 
-            res.cookie('accessToken', '', {maxAge: 1})
-            res.status(201).json({message: 'Logged Out Successfully'}) 
-        } catch (error) {
-            next(error)
-        }
-    } 
-  
-
-export const signUp = (req, res, next) => {
-    User.findOne({ email: req.body.email.toLowerCase() })
-    .exec()
-    .then(user => {
-        if(user) {
-            return res.status(409).json({
-                message: "Email already Exist"
-            });
-        }else{
-            bcrypt.hash(req.body.password, 10, (err, hash) => {
-                if(err){
-                    return res.status(500).json({
-                        error: err
-                    });
-                }else{
-                    const user = new User({
-                        fullName: req.body.full_name, 
-                        email:req.body.email.toLowerCase(),
-                        password: hash
-                    });
-                    user
-                        .save()
-                        .then(result => {
-                            console.log(result)
-                            res.status(201).json({
-                                message: 'User Created Successfully!',
-                                user
-                            })
-                        })
-                        .catch(err => {
-                            console.log(err);
-                            res.status(500).json({
-                                error: err
-                            });
-                        });
-                }
-            })
-        }
-    })      
-  
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new AppError('Not an image! Please upload only images.', 400), false);
+  }
 };
 
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter
+});
 
+export const uploadUserPhoto = upload.single('photo');
 
+export const resizeUserPhoto = catchAsync(async (req, res, next) => {
+  if (!req.file) return next();
 
+  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+
+  await sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/users/${req.file.filename}`);
+
+  next();
+});
+
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach(el => {
+    if (allowedFields.includes(el)) newObj[el] = obj[el];
+  });
+  return newObj;
+};
+
+export const getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
+
+export const updateMe = catchAsync(async (req, res, next) => {
+  // 1) Create error if user POSTs password data
+  if (req.body.password || req.body.passwordConfirm) {
+    return next(
+      new AppError(
+        'This route is not for password updates. Please use /updateMyPassword.',
+        400
+      )
+    );
+  }
+
+  // 2) Filtered out unwanted fields names that are not allowed to be updated
+  const filteredBody = filterObj(req.body, 'name', 'email');
+  if (req.file) filteredBody.photo = req.file.filename;
+
+  // 3) Update user document
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+    new: true,
+    runValidators: true
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: updatedUser
+    }
+  });
+});
+
+export const deleteMe = catchAsync(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, { active: false });
+
+  res.status(204).json({
+    status: 'success',
+    data: null
+  });
+});
+
+export const createUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not defined! Please use /signup instead'
+  });
+};
+
+export const getUser = getOne(User);
+export const getAllUsers = getAll(User);
+
+// Do NOT update passwords with this!
+export const updateUser = updateOne(User);
+export const deleteUser = deleteOne(User);

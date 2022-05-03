@@ -1,5 +1,5 @@
-import catchAsync from '../util/catchAsync.js';
-import AppError from '../util/AppError.js';
+import catchAsync from '../utils/catchAsync.js';
+import AppError from '../utils/AppError.js';
 import messageModel from '../models/messageModel.js';
 
 export const createMessage = async (req, res) => {
