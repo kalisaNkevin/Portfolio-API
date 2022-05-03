@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "devstart": "NODE_ENV=development nodemon index.js",
+    "devstart": "NODE_ENV=development nodemon server.js",
     "test": " NODE_ENV=test  mocha --exit",
     "cover": "c8 --r html -r text --all  -x 'public/**' -x 'coverage/**' --check-coverage npm test",
     "make-badges": "NODE_ENV=test istanbul-badges-readme",
