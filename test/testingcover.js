@@ -33,7 +33,7 @@ describe('User workflow tests', () => {
     
             }).timeout(30000);
   
-    it('should register + login a user, create blog and verify 1 in  DATABASE', done => {
+    it('should register + login a user, create blog and verify 1 in the  DATABASE', done => {
       // 1) Register new user
       const user = {
         name: 'Kalisa Kevin',
