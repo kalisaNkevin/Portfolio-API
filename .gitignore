@@ -5,7 +5,7 @@ node_modules
 
 blog.rest
 admin.rest
-messageQuerry.rest
+message.rest
 auth.rest
 
 .nyc_output
