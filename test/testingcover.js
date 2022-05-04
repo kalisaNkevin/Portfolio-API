@@ -7,8 +7,33 @@ const api = chai.request(server).keepOpen();
 const { expect } = chai;
 
 describe('User workflow tests', () => {
+  it('should register + login a user', done => {
+    // 1) Register new user
+    const user = {
+      name: 'Kalisa Kelvin',
+      email: 'kalisakelvin@andela.com',
+      password: 'andela123',
+      passwordConfirm: 'andela123',
+      role: "admin"
+    };
+        // 2) Login the user
+       api
+          .post('/api/v1/users/login')
+          .send({
+            email: 'kalisakelvin@andela.com',
+            password: 'andela123'
+          })
+          .end((err, res) => {
+            console.log("gtrhth",err, res)
+       
+            done();
+            
+                
+                });
+    
+            }).timeout(30000);
   
-    it('should register + login a user, create blog and verify 1 in DB', done => {
+    it('should register + login a user, create blog and verify 1 in  DATABASE', done => {
       // 1) Register new user
       const user = {
         name: 'Kalisa Kevin',
@@ -162,7 +187,8 @@ describe('User workflow tests', () => {
         });
     }).timeout(30000);
   
-    
-  });
+    }).timeout(30000);
+  
+  
 
  
