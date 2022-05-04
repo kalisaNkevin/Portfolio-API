@@ -8,7 +8,7 @@ const { expect } = chai;
 
 describe('User workflow tests', () => {
   
-    it('should register + login a user, create blog and verify 1 in DB', done => {
+    it.skip('should register + login a user, create blog and verify 1 in DB', done => {
       // 1) Register new user
       const user = {
         name: 'Kalisa Kevin',
@@ -77,7 +77,7 @@ describe('User workflow tests', () => {
               });
     }).timeout(30000);
   
-    it('should register + login a user, create blog and delete it from DB', done => {
+    it.skip('should register + login a user, create blog and delete it from DB', done => {
       // 1) Register new user
       const user = {
         name: 'Karera Kevin',
