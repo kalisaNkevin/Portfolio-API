@@ -24,7 +24,7 @@ describe('User workflow tests', () => {
             password: 'andela123'
           })
           .end((err, res) => {
-            console.log("gtrhth",err, res)
+            console.log("gtrhrtyuihgfth",err, res)
        
             done();
             
